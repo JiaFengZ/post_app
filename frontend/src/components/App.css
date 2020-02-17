@@ -1,0 +1,231 @@
+body {
+  font-size: 14px;
+  height: 100%;
+  font-family: Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+}
+
+#root {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#root, .Home {
+  height: 100%;
+}
+
+img {
+  vertical-align: middle;
+}
+
+.not-fount {
+  text-align: center;
+  color: #d68b8b;
+  font-size: 1.5rem;
+  margin-top: 100px;
+}
+
+.App-header {
+  padding: 10px;
+  height: 60px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  box-sizing: border-box;
+  color: #ea6f5a;
+  border-bottom: solid 1px #ddd;
+  box-shadow: 0 2px 0px 0px rgba(238, 238, 238, 0.6);
+}
+
+.App-header .nav-link {
+  float: left;
+  cursor: pointer;
+}
+
+.select-input {
+  height: 30px;
+  min-width: 100px;
+  border: solid 1px #ddd;
+  border-radius: 4px;
+  background: #eee;
+}
+
+.home-header {
+  margin: 20px 0;
+  position: relative;
+}
+
+.home-main {
+  display: flex;
+  height: calc(100% - 80px);
+  overflow: auto;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.post-list > li {
+  border-bottom: solid 1px #eee;
+  margin: 10px 0;
+  padding: 5px;
+}
+
+.post-header > span:nth-of-type(1) {
+  margin: 0 10px;
+  color: #333;
+}
+
+.post-header > span:nth-of-type(2) {
+  color: #888;
+}
+
+.post-title {
+  font-weight: bold;
+  color: #333;
+  line-height: 1.5;
+  font-size: 1.1rem;
+}
+
+.post-profile {
+  margin: 10px 0;
+  color: #555;
+}
+
+.vote-score {
+  color: #888;
+  font-size: .8rem;
+}
+
+.detail-tab {
+  margin: 0 10px;
+}
+
+.detail-tab img {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.detail-tab img:hover {
+  opacity: 1;
+}
+
+.type-tab {
+  display: inline-block;
+  min-width: 45px;
+  height: 25px;
+  line-height: 25px;
+  border-radius: 2px;
+  cursor: pointer;
+  color: #fff;
+  background: #ea6f5a;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px;
+  padding: 0 5px;
+}
+
+.create-btn {
+  position: absolute;
+  margin: 5px 10px;
+  right: 0;
+}
+
+.edit-btns {
+  float: right;
+}
+.edit-btns button {
+  cursor: pointer;
+  color: #fff;
+  background: #eee;
+  border-radius: 2px;
+  padding: 0 10px;
+  margin: 5px;
+  border: none;
+  height: 25px;
+}
+.edit-btns > button:hover {
+  background: #f5ebeb;
+}
+.comment-input {
+  border: solid 1px #ddd;
+  border-radius: 2px;
+  vertical-align: bottom;
+  width: 100%;
+  height: 60px;
+}
+
+.comment-handle {
+  margin: 0;
+  margin-left: 20px;
+  display: inline-block;
+}
+
+.comment-handle img {
+  margin: 0 5px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.comment-handle img:hover {
+  opacity: 1;
+}
+
+.js-add-comment {
+  cursor: pointer;
+  color: #fff;
+  background: #ea6f5a;
+  border-radius: 2px;
+  padding: 0 10px;
+  margin: 5px;
+  border: none;
+  height: 25px;
+}
+
+.post-edit {
+  padding: 10px;
+  margin: 10px;
+}
+
+.post-edit input, .post-edit textarea {
+  width: 100%;
+  border: solid 1px #ddd;
+  height: 35px;
+  border-radius: 1px;
+  margin: 10px 0;
+  padding-left: 5px;
+}
+
+.post-edit textarea {
+  height: 100px;
+}
+
+.post-edit button {
+  cursor: pointer;
+  color: #fff;
+  background: #ea6f5a;
+  border-radius: 2px;
+  padding: 0 10px;
+  margin: 5px;
+  border: none;
+  height: 25px;
+}
+
+.cancel-btn > a {
+  text-decoration: none;
+  color: inherit;
+}
+
+@media screen and (max-width: 650px) {
+  #root {
+    width: 100%;
+  }
+}
+@media screen and (min-width: 650px) {
+  #root {
+    width: 650px;
+  }
+}
