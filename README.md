@@ -16,6 +16,11 @@
 pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
+## database
+```
+createdb -h localhost -p 5432 -U postgres capstone
+```
+
 ## Running the server
 
 ```bash

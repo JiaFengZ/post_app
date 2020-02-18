@@ -1,261 +1,343 @@
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import or_
 from flask_cors import CORS
+import datetime
 import random
+import sys
 
-from models import setup_db, Question, Category
+from models import setup_db, Post, Comment, Category
+from init_data import init_categories
 
-QUESTIONS_PER_PAGE = 10
 
 def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
   setup_db(app)
   
-  '''
-  Set up CORS. Allow '*' for origins
-  '''
+  # Set up CORS. Allow '*' for origins
   CORS(app)
 
-  '''
-  Use the after_request decorator to set Access-Control-Allow
-  '''
   @app.after_request
   def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add(
+      'Access-Control-Allow-Headers',
+      'Content-Type,Authorization,true'
+    )
+    response.headers.add(
+      'Access-Control-Allow-Methods',
+      'GET,PUT,POST,DELETE,OPTIONS'
+    )
     return response
 
-  '''
-  GET requests for all available categories
-  '''
+
+  # Get all of the categories available for the app
   @app.route('/categories', methods=['GET'])
   def get_categories():
     data = Category.query.order_by(Category.id).all()
+    if len(data) == 0:
+      init_categories()
+    data = Category.query.order_by(Category.id).all()
     categories = [categorie.format() for categorie in data]
-    total = len(categories)
-
-    if total == 0:
-      abort(404)
 
     return jsonify({
       'success': True,
-      'categories': categories,
-      'total_categories': total
+      'categories': categories
     })
 
 
-  '''
-  GET requests for questions
-  '''
-  @app.route('/questions', methods=['GET'])
-  def get_questions():
-    selection = Question.query.order_by(Question.id).all()
-    current_questions = paginate_data(request, selection)
-    total = len(selection)
-
-    if len(current_questions) == 0:
-      abort(404)
+  # Get all of the posts for a particular category
+  @app.route('/categories/<string:category_path>/posts', methods=['GET'])
+  def get_posts_by_category(category_path):
+    data = Post.query.filter(Post.category == category_path).all()
+    posts = [post.format() for post in data]
 
     return jsonify({
       'success': True,
-      'questions': current_questions,
-      'total_questions': total
+      'posts': posts
     })
 
-  '''
-  DELETE question using a question ID.
-  '''
-  @app.route('/questions/<int:question_id>', methods=['DELETE'])
-  def delete_question(question_id):
-    try:
-      question = Question.query.filter(Question.id == question_id).one_or_none()
 
-      if question is None:
+  # Get all of the posts
+  @app.route('/posts', methods=['GET'])
+  def get_posts():
+    data = Post.query.order_by(Post.id).all()
+    posts = [post.format() for post in data]
+
+    return jsonify({
+      'success': True,
+      'posts': posts
+    })
+
+
+  # Get the details of a single post
+  @app.route('/posts/<int:post_id>', methods=['GET'])
+  def get_post_detail(post_id):
+    post = Post.query.get(post_id)
+
+    if post is None:
         abort(404)
 
-      question.delete()
-      selection = Question.query.order_by(Question.id).all()
-      current_questions = paginate_data(request, selection)
+    return jsonify({
+      'success': True,
+      'post': post.format()
+    })
+
+
+  # vote on a post
+  @app.route('/posts/<int:post_id>', methods=['POST'])
+  def vote_post(post_id):
+    try:
+      post = Post.query.get(post_id)
+
+      if post is None:
+        abort(404)
+      if post.vote_score is None:
+        post.vote_score = 0
+      if request.json['option'] is 'upVote':
+        post.vote_score = post.vote_score + 1
+      elif post.vote_score > 0:
+        post.vote_score = post.vote_score - 1
+      post.update()
 
       return jsonify({
         'success': True,
-        'deleted': question_id,
-        'questions': current_questions,
-        'total_questions': len(Question.query.all())
+        'post': post.format()
       })
 
     except Exception:
       abort(422)
 
-  '''
-  Create a new question
-  '''
-  @app.route('/questions', methods=['POST'])
-  def create_question():
+
+  # DELETE post using a post ID
+  @app.route('/posts/<int:post_id>', methods=['DELETE'])
+  def delete_post(post_id):
+    try:
+      post = Post.query.get(post_id)
+
+      if post is None:
+        abort(404)
+
+      post.delete()
+
+      return jsonify({
+        'success': True,
+        'deleted': post_id
+      })
+
+    except Exception:
+      abort(422)
+
+
+  # Create a new post
+  @app.route('/posts', methods=['POST'])
+  def create_post():
     body = request.get_json()
 
-    new_question = body.get('question', None)
-    new_answer = body.get('answer', None)
-    new_difficulty = body.get('difficulty', None)
-    new_category = body.get('category', None)
-
-    if new_question is None:
-      abort(422)
-
     try:
-      question = Question(
-        question=new_question,
-        answer=new_answer,
-        difficulty=new_difficulty,
-        category=new_category
+      post = Post(
+        title=body.get('title', None),
+        body=body.get('body', None),
+        category=body.get('category'),
+        author=body.get('author', None),
+        update_time=datetime.datetime.now()
       )
-      question.insert()
-
-      selection = Question.query.order_by(Question.id).all()
-      current_questions = paginate_data(request, selection)
+      post.insert()
 
       return jsonify({
         'success': True,
-        'created': question.id,
-        'questions': current_questions,
-        'total_questions': len(Question.query.all())
+        'post': post.format()
+      })
+
+    except Exception:
+      print(sys.exc_info())
+      abort(422)
+
+
+  # Edit the details of an existing post
+  @app.route('/posts/<int:post_id>', methods=['PATCH'])
+  def edit_post(post_id):
+      try:
+          post = Post.query.get(post_id)
+          if post is None:
+              abort(404)
+          body = request.get_json()
+          post.title = body.get('title', None)
+          post.body = body.get('body', None)
+          post.update_time = datetime.datetime.now()
+          post.update()
+      except Exception:
+          print(sys.exc_info())
+          abort(422)
+      return jsonify({
+        'success': True,
+        'post': post.format()
+      })
+
+
+  # Get all the comments for a single post
+  @app.route('/posts/<int:post_id>/comments', methods=['GET'])
+  def get_comments_by_post(post_id):
+    data = Comment.query.filter(Comment.post_id == post_id).all()
+    comments = [comment.format() for comment in data]
+
+    return jsonify({
+      'success': True,
+      'comments': comments
+    })
+
+
+  # Add a comment to a post
+  @app.route('/comments', methods=['POST'])
+  def create_comment():
+    body = request.get_json()
+
+    try:
+      comment = Comment(
+        body=body.get('body', None),
+        post_id=body.get('postId', None),
+        author=body.get('author', None),
+        create_time=datetime.datetime.now()
+      )
+      comment.insert()
+
+      return jsonify({
+        'success': True,
+        'comment': comment.format()
       })
 
     except Exception:
       abort(422)
 
-  '''
-  Create a POST endpoint to get questions based on a search term.
-  '''
-  @app.route('/questions/search', methods=['POST'])
-  def search_questions():
-    search_term = request.get_json().get('search_term', '')
-    selection = Question.query.filter(Question.question.ilike('%' + search_term + '%')).all()
-    current_questions = paginate_data(request, selection)
-    total = len(selection)
 
-    if len(current_questions) == 0:
-      abort(404)
+  # vote on a comment
+  @app.route('/comments/<int:comment_id>', methods=['POST'])
+  def vote_comment(comment_id):
+    try:
+      comment = Comment.query.get(comment_id)
 
-    return jsonify({
-      'success': True,
-      'questions': current_questions,
-      'total_questions': total
-    })
+      if comment is None:
+        abort(404)
+      if comment.vote_score is None:
+        comment.vote_score = 0
+      if request.json['option'] is 'upVote':
+        comment.vote_score = post.vote_score + 1
+      elif comment.vote_score > 0:
+        comment.vote_score = post.vote_score - 1
+      comment.update()
 
-  '''
-  Create a GET endpoint to get questions based on category.
-  '''
-  @app.route('/categories/<int:category_id>/questions', methods=['GET'])
-  def get_category_questions(category_id):
-    selection = Question.query.filter(Question.category==category_id).all()
-    current_questions = paginate_data(request, selection)
-    total = len(selection)
-
-    if len(current_questions) == 0:
-      abort(404)
-
-    return jsonify({
-      'success': True,
-      'questions': current_questions,
-      'total_questions': total,
-      "current_category": category_id
-    })
-
-
-  '''
-  Create a POST endpoint to get questions to play the quiz. 
-  This endpoint should take category and previous question parameters 
-  and return a random questions within the given category 
-  '''
-  @app.route('/quizzes', methods=['POST'])
-  def get_quiz_questions():
-    quiz_category = {}
-    previous_questions = []
-    params = request.get_json()
-    if (params != None):
-      quiz_category = params.get('quiz_category', {})
-      previous_questions = params.get('previous_questions', [])
-    selection = Question.query.filter(
-      is_valid_category(quiz_category, Question.category),
-      or_(len(previous_questions)==0, is_new_question(Question.id, previous_questions))
-    ).all()
-
-    if len(selection) == 0:
       return jsonify({
-      'success': True,
-      'question': None
-    })
+        'success': True,
+        'comment': comment.format()
+      })
 
-    total = len(selection)
-    question = selection[random.randint(0, total - 1)].format()
+    except Exception:
+      abort(422)
+
+
+  # DELETE comment using a comment ID
+  @app.route('/comments/<int:comment_id>', methods=['DELETE'])
+  def delete_comment(comment_id):
+    try:
+      comment = Comment.query.get(post_id)
+
+      if comment is None:
+        abort(404)
+
+      comment.delete()
+
+      return jsonify({
+        'success': True,
+        'deleted': comment_id
+      })
+
+    except Exception:
+      abort(422)
+
+
+  # Get the details for a single comment
+  @app.route('/comments/<int:comment_id>', methods=['GET'])
+  def get_comment_detail(comment_id):
+    comment = Comment.query.get(comment_id)
+
+    if comment is None:
+        abort(404)
 
     return jsonify({
       'success': True,
-      'question': question
+      'comment': comment.format()
     })
 
-  def is_valid_category(quiz_category, categoryId):
-    if (len(quiz_category.keys()) == 0):
-      return True
-    else:
-      return categoryId == quiz_category['id']
 
-  def is_new_question(id, previous_questions):
-    for question in previous_questions:
-      if id == question:
-        return False
-    return True
+  # Error Handling
+  '''
+  422
+  '''
+  @app.errorhandler(422)
+  def unprocessable(error):
+      return jsonify({
+        "success": False,
+        "error": 422,
+        "message": "unprocessable"
+        }), 422
 
 
   '''
-  Create error handlers for all expected errors
+  404
   '''
   @app.errorhandler(404)
   def not_found(error):
-    return jsonify({
-      "success": False, 
-      "error": 404,
-      "message": "resource not found"
-      }), 404
+      return jsonify({
+        "success": False,
+        "error": 404,
+        "message": "resource not found"
+        }), 404
 
-  @app.errorhandler(422)
-  def unprocessable(error):
-    return jsonify({
-      "success": False, 
-      "error": 422,
-      "message": "unprocessable"
-      }), 422
 
+  '''
+  400
+  '''
   @app.errorhandler(400)
   def bad_request(error):
-    return jsonify({
-      "success": False, 
-      "error": 400,
-      "message": "bad request"
-      }), 400
-      
+      return jsonify({
+        "success": False,
+        "error": 400,
+        "message": "bad request"
+        }), 400
+
+
+  '''
+  405
+  '''
   @app.errorhandler(405)
   def not_allowed(error):
-    return jsonify({
-      "success": False, 
-      "error": 405,
-      "message": "method not allowed"
-      }), 405
+      return jsonify({
+        "success": False,
+        "error": 405,
+        "message": "method not allowed"
+        }), 405
 
-  DATA_PER_PAGEF = 10
-  def paginate_data(request, selection):
-    page = request.args.get('page', 1, type=int)
-    start =  (page - 1) * DATA_PER_PAGEF
-    end = start + DATA_PER_PAGEF
 
-    data = [item.format() for item in selection]
-    current_data = data[start:end]
+  '''
+  AuthError
+  '''
+  @app.errorhandler(401)
+  def user_unauthorized(error):
+      return jsonify({
+        "success": False,
+        "error": 401,
+        "message": error.description
+        }), 401
 
-    return current_data
+
+  @app.errorhandler(403)
+  def resource_unauthorized(error):
+      return jsonify({
+        "success": False,
+        "error": 403,
+        "message": error.description
+        }), 403
+
   
   return app
 

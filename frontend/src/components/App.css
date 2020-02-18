@@ -33,7 +33,7 @@ img {
   box-sizing: border-box;
   color: #ea6f5a;
   border-bottom: solid 1px #ddd;
-  box-shadow: 0 2px 0px 0px rgba(238, 238, 238, 0.6);
+  box-shadow: 0 1px 0px 0px rgba(238, 238, 238, 0.6);
 }
 
 .App-header .nav-link {

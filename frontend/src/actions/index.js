@@ -158,7 +158,7 @@ export function getComments(id) {
 export function addComment (comment) {
   return function(dispatch) {
     return API.addComment(comment)
-    .then(data => dispatch(getComments(comment.parentId)))
+    .then(data => dispatch(getComments(comment.postId)))
   }
 }
 
@@ -178,8 +178,9 @@ export function deleteComment (id, parentId) {
 
 
 function formatDate(data) {
-  if (data.timestamp) {
-    const date = new Date(data.timestamp)
+  const time = data.update_time || data.create_time
+  if (time) {
+    const date = new Date(time)
     data.date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
   }
   return data

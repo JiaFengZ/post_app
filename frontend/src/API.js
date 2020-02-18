@@ -1,5 +1,5 @@
 
-const api = "http://localhost:3001"
+const api = "http://127.0.0.1:5000"
 
 let token = localStorage.token
 if (!token)
@@ -16,12 +16,14 @@ export const getCategories = () =>
     .then(data => data.categories)
 
 export const getPostsByCategory = (category) =>
-  fetch(`${api}/${category}/posts`, { headers })
+  fetch(`${api}/categories/${category}/posts`, { headers })
     .then(res => res.json())
+    .then(data => data.posts)
 
 export const getAllPosts = () =>
   fetch(`${api}/posts`, { headers })
     .then(res => res.json())
+    .then(data => data.posts)
 
 export const addPost = (post) =>
   fetch(`${api}/posts`, {
@@ -36,6 +38,7 @@ export const addPost = (post) =>
 export const getPostDetail = (id) =>
   fetch(`${api}/posts/${id}`, { headers })
     .then(res => res.json())
+    .then(data => data.post)
 
 export const votePost = (id, type) =>
   fetch(`${api}/posts/${id}`, {
@@ -46,16 +49,18 @@ export const votePost = (id, type) =>
     },
     body: JSON.stringify({ option: type })
   }).then(res => res.json())
+  .then(data => data.post)
 
 export const updatePost = (id, post) =>
   fetch(`${api}/posts/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify( post )
   }).then(res => res.json())
+  .then(data => data.post)
 
 export const deletePost = (id) =>
   fetch(`${api}/posts/${id}`, {
@@ -69,6 +74,7 @@ export const deletePost = (id) =>
 export const getComments = (id) =>
   fetch(`${api}/posts/${id}/comments`, { headers })
     .then(res => res.json())
+    .then(data => data.comments)
 
 export const addComment = (comment) =>
   fetch(`${api}/comments`, {
@@ -83,6 +89,7 @@ export const addComment = (comment) =>
 export const getCommentDetail = (id) =>
   fetch(`${api}/comments/${id}`, { headers })
     .then(res => res.json())
+    .then(data => data.comment)
 
 export const voteComment = (id, type) =>
   fetch(`${api}/comments/${id}`, {

@@ -37,7 +37,7 @@ class PostDetail extends Component {
         timestamp: new Date().getTime(),
         body: Helper.htmlEncode(this.commentInput.value),
         author: '匿名用户',
-        parentId: this.props.postDetail.id
+        postId: this.props.postDetail.id
       }).then(() => {
         this.commentInput.value = ''
       })
@@ -121,7 +121,7 @@ class PostDetail extends Component {
                     <img alt="upvote" onClick={() => this.props.upVoteComment(comment.id, this.props.postDetail.id)} src={require('../images/upvote.png')}/>
                     <img alt="downvote" onClick={() => this.props.downVoteComment(comment.id, this.props.postDetail.id)} src={require('../images/downvote.png')}/>
                     <img onClick={() => this.deleteComment(comment.id)} alt="delete" src={require('../images/delete.png')}/>
-                    <img alt="edit" onClick={() => this.editComment(comment)} src={require('../images/edit.png')}/>
+                    {/* <img alt="edit" onClick={() => this.editComment(comment)} src={require('../images/edit.png')}/> */}
                   </p>
                   </li>)
               })
