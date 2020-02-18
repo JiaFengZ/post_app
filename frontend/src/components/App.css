@@ -41,6 +41,12 @@ img {
   cursor: pointer;
 }
 
+.login-link, .logout-link {
+  text-decoration: underline;
+  color: #ea6f5a;
+  cursor: pointer;
+}
+
 .select-input {
   height: 30px;
   min-width: 100px;

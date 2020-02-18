@@ -6,6 +6,7 @@ import Header from './share/Header'
 import RankingChanger from './share/RankingChanger'
 import './App.css'
 import * as Helper from '../helper'
+import { auth } from '../auth'
 
 class PostDetail extends Component {
 
@@ -83,14 +84,22 @@ class PostDetail extends Component {
           <span>{post.author}</span>
           <span>{post.date}</span>
           <i className="edit-btns">
-            <button onClick={() => this.props.upVotePost(post)}><img alt="delete" src={require('../images/upvote.png')}/></button>
-            <button onClick={() => this.props.downVotePost(post)}><img alt="delete" src={require('../images/downvote.png')}/></button>
-            <button onClick={() => this.deletePost(post)}><img alt="delete" src={require('../images/delete.png')}/></button>
-            <button><Link to={'/edit/'+post.id}><img alt="edit" src={require('../images/edit.png')}/></Link></button>
+            {
+              auth.can('vote:post') && <button onClick={() => this.props.upVotePost(post)}><img alt="delete" src={require('../images/upvote.png')}/></button>
+            }
+            {
+              auth.can('vote:post') && <button onClick={() => this.props.downVotePost(post)}><img alt="delete" src={require('../images/downvote.png')}/></button>
+            }
+            {
+              auth.can('delete:post') && <button onClick={() => this.deletePost(post)}><img alt="delete" src={require('../images/delete.png')}/></button>
+            }
+            {
+              auth.can('edit:post') && <button><Link to={'/edit/'+post.id}><img alt="edit" src={require('../images/edit.png')}/></Link></button>
+            }
           </i>
         </p>
         <p className="post-title">{post.title}</p>
-        <p className="vote-score"><img alt="vote" src={require('../images/love.png')}/>{post.voteScore}</p>
+        <p className="vote-score"><img alt="vote" src={require('../images/love.png')}/>{post.vote_score || 0}</p>
         <p className="post-content">
           {post.body}
         </p>
@@ -99,12 +108,16 @@ class PostDetail extends Component {
             <span>评论</span>
             <span className="comment-total">({comments.length})</span>
           </h2>
+          {
+            auth.can('create:comment') && (
+              <div className="comment-reply">
+                <textarea className="comment-input"  cols="30" rows="10" ref={(input) => {this.commentInput=input}}></textarea>
+                <button className="js-add-comment" onClick={this.postComment}>发表</button>
+                <button className="js-add-comment" onClick={this.cancelComment}>取消</button>
+              </div>
+            )
+          }
           
-          <div className="comment-reply">
-            <textarea className="comment-input"  cols="30" rows="10" ref={(input) => {this.commentInput=input}}></textarea>
-            <button className="js-add-comment" onClick={this.postComment}>发表</button>
-            <button className="js-add-comment" onClick={this.cancelComment}>取消</button>
-          </div>
           <label>排序：</label><RankingChanger value={this.props.commentRanking} changeRanking={this.props.changeRanking}/>
          <ul className="post-list">
             {
@@ -116,11 +129,19 @@ class PostDetail extends Component {
                     <span>{comment.date}</span>
                   </div>
                   <div className="post-profile">{comment.body}</div>
-                  <span className="vote-score"><img alt="vote" src={require('../images/love.png')}/>{comment.voteScore}</span>
+                  <span className="vote-score">
+                    <img alt="vote" src={require('../images/love.png')}/>{comment.vote_score || 0}
+                  </span>
                   <p className="comment-handle">
-                    <img alt="upvote" onClick={() => this.props.upVoteComment(comment.id, this.props.postDetail.id)} src={require('../images/upvote.png')}/>
-                    <img alt="downvote" onClick={() => this.props.downVoteComment(comment.id, this.props.postDetail.id)} src={require('../images/downvote.png')}/>
-                    <img onClick={() => this.deleteComment(comment.id)} alt="delete" src={require('../images/delete.png')}/>
+                    {
+                      auth.can('vote:comment') && <img alt="upvote" onClick={() => this.props.upVoteComment(comment.id, this.props.postDetail.id)} src={require('../images/upvote.png')}/>
+                    }
+                    {
+                      auth.can('vote:comment') && <img alt="downvote" onClick={() => this.props.downVoteComment(comment.id, this.props.postDetail.id)} src={require('../images/downvote.png')}/>
+                    }
+                    {
+                      auth.can('delete:comment') && <img onClick={() => this.deleteComment(comment.id)} alt="delete" src={require('../images/delete.png')}/>
+                    }
                     {/* <img alt="edit" onClick={() => this.editComment(comment)} src={require('../images/edit.png')}/> */}
                   </p>
                   </li>)

@@ -1,4 +1,51 @@
-## Getting Started
+# POST APP
+
+## role and permissions
+
+### all permissions
+
+* ```create:post``` create a new post
+
+* ```delete:post``` delete the post
+
+* ```edit:post``` edit the post
+
+* ```vote:post``` vote for the post
+
+* ```create:comment``` add a new comment
+
+* ```delete:comment``` delete the comment
+
+* ```vote:comment``` vote for the comment
+
+### vistor(not logged in)
+just can view the posts and comments
+
+### role
+
+#### PostManager
+
+have all the permissions
+
+#### PostVisitor
+
+have the following permissions:
+* ```create:comment```
+* ```vote:comment	```
+* ```vote:post```
+
+## login user for live application
+
+### PostVisitor
+email: ```1040185058@qq.com```
+password: ```123456zZ```
+
+### PostManager
+email: ```jiafengztodo@gamil.com```
+password: ```123456zZ```
+
+
+## development Getting Started
 
 ### Installing Dependencies
 
@@ -13,7 +60,7 @@
 #### PIP Dependencies
 
 ```bash
-pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install -r requirements.txt
 ```
 
 ## database

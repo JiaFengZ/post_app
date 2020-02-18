@@ -9,6 +9,7 @@ import reducer from './reducers'
 import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
+import { auth } from './auth'
 
 const loggerMiddleware = createLogger()
 const store = createStore(
@@ -18,6 +19,9 @@ const store = createStore(
       loggerMiddleware
     )
 )
+
+auth.load_jwts()
+auth.check_token_fragment()
 
 ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'));
 registerServiceWorker();

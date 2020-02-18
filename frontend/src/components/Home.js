@@ -5,12 +5,16 @@ import { changeRanking } from '../actions'
 import Header from './share/Header'
 import RankingChanger from './share/RankingChanger'
 import PostList from './share/PostList'
+import { auth } from '../auth'
 import './App.css';
 
 class HomePage extends Component {
   constructor(props) {
     super(props)
     this.selectCateGory = this.selectCateGory.bind(this)
+    this.state = {
+      token: auth.token
+    }
   }  
 
   selectCateGory(category) {
@@ -19,20 +23,47 @@ class HomePage extends Component {
     }
   }
 
+  logout = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    auth.logout()
+    this.setState({
+      token: auth.token
+    })
+    window.location.hash = ''
+  }
+
   render() {
-    const posts = Array.isArray(this.props.posts) ? this.props.posts.sort((() => {
-        if (this.props.ranking === '评分') return (a, b) => b.voteScore - a.voteScore
-        else return (a, b) => b.timestamp - a.timestamp
+      const posts = Array.isArray(this.props.posts) ? this.props.posts.sort((() => {
+        if (this.props.ranking === '评分') return (a, b) => b.vote_score - a.vote_score
+        else return (a, b) => b.update_time - a.update_time
       })()) : []
+      const loginURL = auth.build_login_link()
+      const { token } = this.state
       return (
         <div className="Home">
+          {
+            token ? (
+              <a className='logout-link' onClick={this.logout}>Log Out</a>
+            ) : (
+              <a className='login-link' href={loginURL}>Log In</a>
+            )
+          }
           <Header title="所有帖子"/>
           <header className="home-header">
             <label>排序：</label><RankingChanger value={this.props.ranking} changeRanking={this.props.changeRanking}/>
-            <Link to='/add'><img className="create-btn" alt="create post" src={require('../images/Add.png')}/></Link><br/>
+            {
+              auth.can('create:post') && <Link to='/add' title='create post'>
+                <img className="create-btn" alt="create post" src={require('../images/Add.png')}/>
+              </Link>
+            }
+            
+            <br/>
             <label>标签：</label>
             <span>
-            {this.props.categorys.map((category) => <span className="type-tab" key={category.path} onClick={() => this.selectCateGory(category.path)}>{category.name}</span>)}
+            {this.props.categorys.map(
+              (category) => <span title={`show posts of ${category.name}`} className="type-tab" key={category.path} onClick={() => this.selectCateGory(category.path)}>{category.name}</span>
+            )}
             </span>
             
           </header>
