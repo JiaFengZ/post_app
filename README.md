@@ -1,5 +1,43 @@
 # POST APP
 
+## endpoints
+
+### GET categories
+Get all of the categories available for the app
+
+### GET /categories/<string:category_path>/posts
+Get all of the posts for a particular category
+
+### GET /posts
+Get all of the posts
+
+### GET /posts/<int:post_id>
+Get the details of a single post
+
+### POST /posts/<int:post_id>
+vote for a post
+
+### DELETE /posts/<int:post_id>
+DELETE post using a post ID
+
+### POST /posts
+Create a new post
+
+#### PATCH /posts/<int:post_id>
+Edit the details of an existing post
+
+### GET /posts/<int:post_id>/comments
+Get all the comments for a single post
+
+### POST /comments
+Add a comment to a post
+
+### POST /comments/<int:comment_id>
+vote for a comment
+
+### DELETE /comments/<int:comment_id>
+DELETE comment using a comment ID
+
 ## role and permissions
 
 ### all permissions
@@ -42,10 +80,16 @@ email: ```1040185058@qq.com```
 password: ```123456zZ```
 
 ### PostManager
-email: ```jiafengztodo@gamil.com```
+email: ```jiafengztodo@gmail.com```
 password: ```123456zZ```
 
 ## run the test
+
+* enable to test, please set the ```visitor_role_token``` and ```manager_role_token``` in test.py
+
+* setup database: ```createdb -h localhost -p 5432 -U postgres capstone```
+
+* run
 ```
 python test.py
 ```

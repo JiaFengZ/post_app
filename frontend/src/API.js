@@ -6,6 +6,7 @@ const api = environment.apiServerUrl
 function getHeaders() {
   return {
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': auth.apiServerUrl,
     'Authorization': `Bearer ${auth.activeJWT()}`
   }
 }

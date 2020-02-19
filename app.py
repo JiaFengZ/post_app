@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import datetime
@@ -30,6 +30,10 @@ def create_app(test_config=None):
           'GET,PUT,POST,DELETE,OPTIONS'
         )
         return response
+
+    @app.route('/')
+    def index():
+        return render_template('dist/index.html')
 
     # Get all of the categories available for the app
     @app.route('/categories', methods=['GET'])
