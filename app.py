@@ -345,3 +345,5 @@ def create_app(test_config=None):
           }), 403
 
     return app
+
+APP = create_app()
