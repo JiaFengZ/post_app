@@ -5,6 +5,7 @@ env
 node_modules
 migrations
 api-server
+build
 *.whl
 
 # OS generated files #

@@ -94,7 +94,7 @@ class PostDetail extends Component {
               auth.can('delete:post') && <button onClick={() => this.deletePost(post)}><img alt="delete" src={require('../images/delete.png')}/></button>
             }
             {
-              auth.can('edit:post') && <button><Link to={'/edit/'+post.id}><img alt="edit" src={require('../images/edit.png')}/></Link></button>
+              auth.can('edit:post') && <button><Link to={'/web/edit/'+post.id}><img alt="edit" src={require('../images/edit.png')}/></Link></button>
             }
           </i>
         </p>

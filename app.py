@@ -31,9 +31,13 @@ def create_app(test_config=None):
         )
         return response
 
-    @app.route('/')
-    def index():
-        return render_template('dist/index.html')
+    @app.route('/web')
+    @app.route('/web/add')
+    @app.route('/web/<string:path>/posts')
+    @app.route('/web/detail/<string:path>')
+    @app.route('/web/edit/<string:path>')
+    def index(path=''):
+        return render_template('index.html')
 
     # Get all of the categories available for the app
     @app.route('/categories', methods=['GET'])

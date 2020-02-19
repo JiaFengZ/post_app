@@ -53,7 +53,7 @@ class HomePage extends Component {
           <header className="home-header">
             <label>rank:</label><RankingChanger value={this.props.ranking} changeRanking={this.props.changeRanking}/>
             {
-              auth.can('create:post') && <Link to='/add' title='create post'>
+              auth.can('create:post') && <Link to='/web/add' title='create post'>
                 <img className="create-btn" alt="create post" src={require('../images/Add.png')}/>
               </Link>
             }

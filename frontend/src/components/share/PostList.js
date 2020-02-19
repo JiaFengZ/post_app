@@ -18,7 +18,7 @@ class PostList extends Component {
                     <span className="type-tab">{post.category}</span>
                   </div>
                   <div className="post-title">
-                    <Link to={'/posts/'+post.id}>{post.title}</Link>
+                    <Link to={'/web/detail/'+post.id}>{post.title}</Link>
                   </div>
                   <div className="post-profile">{Helper.trim(post.body)}</div>
                   <span className="vote-score"><img alt="vote" src={require('../../images/love.png')}/>{post.vote_score || 0}</span>

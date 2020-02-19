@@ -21,12 +21,12 @@ class App extends Component {
     return (
         <BrowserRouter>
           <Switch>
-              <Route exact path='/' render={(props) => <HomePage history={props.history} categorys={this.props.category.categories} posts={this.props.post.allPosts}/>} />
-              <Route path='/:category/posts' render={(props) => <PostCategory match={props.match} goBack={props.history.goBack} getPosts={this.props.getPostsByCategory} posts={this.props.post.categoryPosts}/>} />
-              <Route path='/posts/:id' render={(props) => <PostDetail match={props.match} history={props.history}/>}/>
-              <Route path='/edit/:id' render={(props) => <PostEdit match={props.match} updatePost = {this.props.updatePost}
+              <Route exact path='/web' render={(props) => <HomePage history={props.history} categorys={this.props.category.categories} posts={this.props.post.allPosts}/>} />
+              <Route path='/web/:category/posts' render={(props) => <PostCategory match={props.match} goBack={props.history.goBack} getPosts={this.props.getPostsByCategory} posts={this.props.post.categoryPosts}/>} />
+              <Route path='/web/detail/:id' render={(props) => <PostDetail match={props.match} history={props.history}/>}/>
+              <Route path='/web/edit/:id' render={(props) => <PostEdit match={props.match} updatePost = {this.props.updatePost}
                  goBack={props.history.goBack} post={this.props.post.postDetail}  getDetail={this.props.getPostDetail}/>}/>
-              <Route path='/add' render={(props) => <PostEdit match={props.match} addPost = {this.props.addPost}
+              <Route path='/web/add' render={(props) => <PostEdit match={props.match} addPost = {this.props.addPost}
                 goBack={props.history.goBack} categorys={this.props.category.categories}/>}/>
               <Route path='/notfound' component={NotFount}/>
           </Switch>
