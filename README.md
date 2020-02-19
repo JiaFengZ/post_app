@@ -1,4 +1,15 @@
 # POST APP
+hosted: ```https://post-app-zjf.herokuapp.com/web```
+
+# login user for live application
+
+## role 1: PostVisitor
+email: ```1040185058@qq.com```
+password: ```123456zZ```
+
+## role 2: PostManager
+email: ```jiafengztodo@gmail.com```
+password: ```123456zZ```
 
 ## endpoints
 
@@ -72,16 +83,6 @@ have the following permissions:
 * ```create:comment```
 * ```vote:comment	```
 * ```vote:post```
-
-## login user for live application
-
-### PostVisitor
-email: ```1040185058@qq.com```
-password: ```123456zZ```
-
-### PostManager
-email: ```jiafengztodo@gmail.com```
-password: ```123456zZ```
 
 ## run the test
 
