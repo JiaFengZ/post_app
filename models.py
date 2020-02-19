@@ -7,7 +7,9 @@ import time
 database_name = "capstone"
 password = 'todo'
 user_name = 'postgres'
-database_path = "postgresql://{}:{}@{}/{}".format(user_name, password, 'localhost:5432', database_name)
+database_path = "postgresql://{}:{}@{}/{}".format(
+  user_name, password, 'localhost:5432', database_name
+)
 
 db = SQLAlchemy()
 
@@ -15,12 +17,15 @@ db = SQLAlchemy()
 setup_db(app)
     binds a flask application and a SQLAlchemy service
 '''
+
+
 def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
     db.create_all()
+
 
 # Post
 class Post(db.Model):
@@ -45,7 +50,7 @@ class Post(db.Model):
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
@@ -87,7 +92,7 @@ class Comment(db.Model):
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
@@ -117,7 +122,7 @@ class Category(db.Model):
     def __init__(self, name, path):
         self.name = name
         self.path = path
-    
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
@@ -131,4 +136,8 @@ class Category(db.Model):
 
 
 def format_time(time_input):
-    return int(time.mktime(time.strptime(time_input.strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S"))) * 1000
+    return int(time.mktime(
+      time.strptime(
+        time_input.strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S")
+      )
+    ) * 1000

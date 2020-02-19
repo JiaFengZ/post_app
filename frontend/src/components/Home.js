@@ -35,7 +35,7 @@ class HomePage extends Component {
 
   render() {
       const posts = Array.isArray(this.props.posts) ? this.props.posts.sort((() => {
-        if (this.props.ranking === '评分') return (a, b) => b.vote_score - a.vote_score
+        if (this.props.ranking === 'vote score') return (a, b) => b.vote_score - a.vote_score
         else return (a, b) => b.update_time - a.update_time
       })()) : []
       const loginURL = auth.build_login_link()
@@ -49,9 +49,9 @@ class HomePage extends Component {
               <a className='login-link' href={loginURL}>Log In</a>
             )
           }
-          <Header title="所有帖子"/>
+          <Header title="All Posts"/>
           <header className="home-header">
-            <label>排序：</label><RankingChanger value={this.props.ranking} changeRanking={this.props.changeRanking}/>
+            <label>rank:</label><RankingChanger value={this.props.ranking} changeRanking={this.props.changeRanking}/>
             {
               auth.can('create:post') && <Link to='/add' title='create post'>
                 <img className="create-btn" alt="create post" src={require('../images/Add.png')}/>
@@ -59,7 +59,7 @@ class HomePage extends Component {
             }
             
             <br/>
-            <label>标签：</label>
+            <label>label:</label>
             <span>
             {this.props.categorys.map(
               (category) => <span title={`show posts of ${category.name}`} className="type-tab" key={category.path} onClick={() => this.selectCateGory(category.path)}>{category.name}</span>

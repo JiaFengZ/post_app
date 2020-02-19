@@ -15,7 +15,7 @@ class CategorySelect extends Component {
     return (
       
       <select className="select-input" onChange={this.selectCateGory} defaultValue={this.props.defaultValue||'none'}>
-        <option disabled value="none">请选择</option>
+        <option disabled value="none">please select</option>
         {this.props.categorys.map((category) => <option key={category.path} value={category.path}>{category.name}</option>)}
       </select>
     )

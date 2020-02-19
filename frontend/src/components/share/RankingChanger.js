@@ -14,7 +14,7 @@ class RankingChanger extends Component {
   render() {
     return (
       <select className="select-input" onChange={this.changeRanking} defaultValue={this.props.value}>
-        <option>评分</option><option>时间</option>
+        <option>vote score</option><option>time</option>
       </select>
     )
   }

@@ -30,6 +30,7 @@ have all the permissions
 #### PostVisitor
 
 have the following permissions:
+
 * ```create:comment```
 * ```vote:comment	```
 * ```vote:post```
@@ -43,6 +44,11 @@ password: ```123456zZ```
 ### PostManager
 email: ```jiafengztodo@gamil.com```
 password: ```123456zZ```
+
+## run the test
+```
+python test.py
+```
 
 
 ## development Getting Started

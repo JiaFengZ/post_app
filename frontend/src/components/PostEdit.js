@@ -56,14 +56,14 @@ class PostEdit extends Component {
   render() {
     return (
     	<div>
-    		<Header title="编辑帖子" backLink={true} goBack={this.props.goBack}/>    	
+    		<Header title="Edit Post" backLink={true} goBack={this.props.goBack}/>    	
 	    	<form className="post-edit" onSubmit={this.handleSubmit}>
-	    		{this.state.isAdd&&(<p><label>作者：</label><input required name="author" type="text" ref={(input) => this.authorInput = input}/></p>)}
-          {this.state.isAdd&&(<p><label>标签：</label><CategorySelect defaultValue="react" categorys={this.props.categorys} selectCateGory={this.selectCateGory}/></p>)}
-          <p><label>标题：</label><input required name="title" type="text" defaultValue={this.state.post.title} ref={(input) => this.input = input}/></p>
-	    		<p><label>正文：</label><textarea required title="body" row="4"defaultValue={this.state.post.body} ref={(textarea) => this.textarea = textarea}></textarea></p>
-	    		<button className="submit-btn" type="submit">确定</button>
-          <button className="cancel-btn" onClick={(e) => {e.preventDefault();this.props.goBack()}}>取消</button>
+	    		{this.state.isAdd&&(<p><label>author:</label><input required name="author" type="text" ref={(input) => this.authorInput = input}/></p>)}
+          {this.state.isAdd&&(<p><label>label:</label><CategorySelect defaultValue="react" categorys={this.props.categorys} selectCateGory={this.selectCateGory}/></p>)}
+          <p><label>title:</label><input required name="title" type="text" defaultValue={this.state.post.title} ref={(input) => this.input = input}/></p>
+	    		<p><label>body:</label><textarea required title="body" row="4"defaultValue={this.state.post.body} ref={(textarea) => this.textarea = textarea}></textarea></p>
+	    		<button className="submit-btn" type="submit">submit</button>
+          <button className="cancel-btn" onClick={(e) => {e.preventDefault();this.props.goBack()}}>cancel</button>
 	    	</form>
     	</div>
     )

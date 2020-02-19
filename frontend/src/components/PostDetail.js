@@ -73,12 +73,12 @@ class PostDetail extends Component {
     const goBack = this.props.history.goBack
     const post = this.props.postDetail
     const comments = Array.isArray(this.props.comments) ? this.props.comments.sort((() => {
-        if (this.props.commentRanking === '评分') return (a, b) => b.voteScore - a.voteScore
-        else return (a, b) => b.timestamp - a.timestamp
+        if (this.props.commentRanking === 'vote score') return (a, b) => b.vote_score - a.vote_score
+        else return (a, b) => b.create_time - a.create_time
       })()) : []
     return (
       <div className="post-detail">
-        <Header title="帖子详情" backLink={true} goBack={goBack}/>
+        <Header title="Post Detail" backLink={true} goBack={goBack}/>
         <p className="post-header">
           <img alt="user" src={require('../images/cc-head.png')}/>
           <span>{post.author}</span>
@@ -105,20 +105,20 @@ class PostDetail extends Component {
         </p>
         <div className="post-comment">
           <h2 className="comment-title">
-            <span>评论</span>
+            <span>comments</span>
             <span className="comment-total">({comments.length})</span>
           </h2>
           {
             auth.can('create:comment') && (
               <div className="comment-reply">
                 <textarea className="comment-input"  cols="30" rows="10" ref={(input) => {this.commentInput=input}}></textarea>
-                <button className="js-add-comment" onClick={this.postComment}>发表</button>
-                <button className="js-add-comment" onClick={this.cancelComment}>取消</button>
+                <button className="js-add-comment" onClick={this.postComment}>submit</button>
+                <button className="js-add-comment" onClick={this.cancelComment}>cancel</button>
               </div>
             )
           }
           
-          <label>排序：</label><RankingChanger value={this.props.commentRanking} changeRanking={this.props.changeRanking}/>
+          <label>rank:</label><RankingChanger value={this.props.commentRanking} changeRanking={this.props.changeRanking}/>
          <ul className="post-list">
             {
               comments.map((comment, index) => {
