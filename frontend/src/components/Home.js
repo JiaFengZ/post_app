@@ -19,7 +19,7 @@ class HomePage extends Component {
 
   selectCateGory(category) {
     if (category) {
-      this.props.history.push('/' + category + '/posts')
+      this.props.history.push('/web/' + category + '/posts')
     }
   }
 

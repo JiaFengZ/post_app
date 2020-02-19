@@ -7,9 +7,10 @@ import time
 database_name = "capstone"
 password = 'todo'
 user_name = 'postgres'
-database_path = "postgresql://{}:{}@{}/{}".format(
+default_database_path = "postgresql://{}:{}@{}/{}".format(
   user_name, password, 'localhost:5432', database_name
 )
+database_path = os.getenv('DATABASE_URL', default=default_database_path)
 
 db = SQLAlchemy()
 

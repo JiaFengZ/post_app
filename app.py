@@ -31,6 +31,7 @@ def create_app(test_config=None):
         )
         return response
 
+    @app.route('/')
     @app.route('/web')
     @app.route('/web/add')
     @app.route('/web/<string:path>/posts')

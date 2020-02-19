@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { getCategories, getPostsByCategory, fetchAllPosts, getPostDetail, addPost, updatePost } from '../actions'
@@ -21,6 +21,7 @@ class App extends Component {
     return (
         <BrowserRouter>
           <Switch>
+              <Route exact path='/' render={() => <Redirect to="/web"/>} />
               <Route exact path='/web' render={(props) => <HomePage history={props.history} categorys={this.props.category.categories} posts={this.props.post.allPosts}/>} />
               <Route path='/web/:category/posts' render={(props) => <PostCategory match={props.match} goBack={props.history.goBack} getPosts={this.props.getPostsByCategory} posts={this.props.post.categoryPosts}/>} />
               <Route path='/web/detail/:id' render={(props) => <PostDetail match={props.match} history={props.history}/>}/>
