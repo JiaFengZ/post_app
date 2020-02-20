@@ -1,16 +1,6 @@
 # POST APP
 hosted: ```https://post-app-zjf.herokuapp.com/web```
 
-# login user for live application
-
-## role 1: PostVisitor
-email: ```1040185058@qq.com```
-password: ```123456zZ```
-
-## role 2: PostManager
-email: ```jiafengztodo@gmail.com```
-password: ```123456zZ```
-
 ## endpoints
 
 ### GET categories
@@ -133,3 +123,62 @@ To run the tests, run
 ```
 python test.py
 ```
+
+
+## heroku 部署
+
+### 项目文件配置
+
+* requirements.txt 定义依赖安装包
+
+* Procfile
+```
+web: gunicorn app:APP # app 为应用入口文件，App为该文件中定义的应用实例
+```
+
+* manage.py 定义数据库迁移脚本
+
+* setup.sh 设置启动环境变量
+```
+export FLASK_APP='app'
+export FLASK_ENV='production'
+```
+
+### 安装 heroku cli 工具
+
+### 检查 heroku 安装状态
+```
+heroku --help
+```
+
+### 创建 heroku app，获取heroku远程仓库地址
+```
+heroku create name_of_your_app
+```
+
+### 添加heroku部署远程仓库
+```
+git remote add heroku heroku_git_url
+```
+
+### 初始化添加远程数据库
+```
+heroku addons:create heroku-postgresql:hobby-dev --app name_of_your_application
+```
+
+### 设置 heroku app 环境变量
+```
+DATABASE_URL
+```
+
+### 推送代码部署
+```
+git push heroku master
+```
+
+### 数据库迁移
+```
+heroku run python manage.py db upgrade --app name_of_your_application
+```
+注意：
+* 需本地先执行 init 和 migrate，生成 migrations 文件，并且versions文件夹不为空，才可推送heroku部署数据库成功
